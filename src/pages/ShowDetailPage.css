@@ -1,0 +1,110 @@
+/* src/pages/ShowDetailPage.css */
+
+.show-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem; 
+}
+
+.back-link {
+  display: inline-block;
+  margin-bottom: 1.5rem; 
+  font-size: 0.95rem; 
+  color: #3b82f6; 
+  text-decoration: none;
+  font-weight: 500;
+}
+.back-link:hover {
+  text-decoration: underline;
+}
+
+.show-header-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 2rem; 
+  align-items: start;
+}
+
+.show-image-large {
+  width: 100%;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 6px; 
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.show-title {
+  font-size: 2rem; 
+  font-weight: 700;
+  margin: 0 0 0.5rem 0; 
+}
+
+.show-description {
+  font-size: 0.9rem; /* Tighter font size */
+  line-height: 1.5;
+  color: #444;
+  margin: 0 0 1rem 0; 
+}
+
+.show-meta {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem; 
+}
+
+.meta-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem; /* Tighter spacing */
+}
+
+.meta-item strong {
+  font-size: 0.75rem; /* Smaller label font */
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.meta-item span {
+  font-size: 0.9rem; /* Smaller value font */
+  font-weight: 500;
+}
+
+.genre-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem; 
+}
+
+.genre-tag {
+  background-color: #eee;
+  padding: 0.2rem 0.6rem; 
+  border-radius: 4px; 
+  font-size: 0.7rem; /* Smallest font size for tags */
+  font-weight: 500;
+}
+
+.current-season-title {
+  font-size: 1.5rem; 
+  font-weight: 600;
+  margin: 2rem 0 1rem 0;
+  border-bottom: 1px solid #eee; 
+  padding-bottom: 0.5rem; 
+}
+
+/* Responsive styles for mobile */
+@media (max-width: 768px) {
+  .show-header-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  .show-image-large {
+    height: 300px;
+  }
+  .show-title {
+    font-size: 1.75rem;
+  }
+  .show-meta {
+    grid-template-columns: 1fr;
+  }
+}
