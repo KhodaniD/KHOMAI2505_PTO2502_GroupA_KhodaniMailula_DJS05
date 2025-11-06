@@ -1,0 +1,16 @@
+import React from 'react';
+import './LoadingSpinner.css'; // We will create this CSS file
+
+/**
+ * A simple loading spinner component.
+ * @returns {JSX.Element} The loading spinner.
+ */
+const LoadingSpinner = () => {
+  return (
+    <div className="spinner-container">
+      <div className="loading-spinner"></div>
+    </div>
+  );
+};
+
+export default LoadingSpinner;
