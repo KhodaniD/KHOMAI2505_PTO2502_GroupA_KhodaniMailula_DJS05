@@ -7,7 +7,7 @@ main {
     padding-bottom: 40px; 
 }
 
-/* ------------------- Control Panel Styling ------------------- */
+/* ------------------- Control Panel Styling (Desktop) ------------------- */
 .control-panel {
     display: flex;
     justify-content: space-between; 
@@ -18,40 +18,6 @@ main {
     border-bottom: 1px solid #eee; 
     flex-wrap: wrap; 
 }
-
-/* --- MOBILE RESPONSIVE FIX (Controls/Grid) --- */
-@media (max-width: 768px) {
-    .control-panel {
-        padding: 10px 15px; 
-        justify-content: center; 
-        flex-direction: column; /* Stacks controls vertically on mobile */
-    }
-    .search-container {
-        width: 100%;
-        max-width: 100%;
-    }
-    .control-input {
-        width: 100%;
-    }
-    .control-group {
-        width: 100%;
-        justify-content: space-between;
-    }
-    .control-select {
-        flex-grow: 1;
-    }
-    .podcast-grid {
-        padding: 20px 20px;
-        grid-template-columns: repeat(3, 1fr); 
-    }
-    @media (max-width: 480px) {
-        .podcast-grid {
-            grid-template-columns: repeat(2, 1fr); 
-            padding: 20px 15px;
-        }
-    }
-}
-/* --- END OF MOBILE FIX --- */
 
 .search-container {
     max-width: 300px; 
@@ -68,7 +34,7 @@ main {
 .control-input,
 .control-select {
     padding: 8px 12px;
-    border: 1px solid #ddd; /* Match border from old project */
+    border: 1px solid #ddd; 
     border-radius: 8px; 
     font-size: 0.9em;
     height: 35px; 
@@ -87,7 +53,6 @@ main {
     appearance: none;
     -webkit-appearance: none;
     padding-right: 30px; 
-    /* Base background image for dropdown arrow */
     background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath fill='%236c757d' d='M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z'/%3E%3C/svg%3E");
     background-repeat: no-repeat;
     background-position: right 10px center;
@@ -96,38 +61,39 @@ main {
 }
 
 
-/* ------------------- Podcast Grid Layout (7 COLUMN) ------------------- */
+/* ------------------- Podcast Grid Layout (7 COLUMN - DESKTOP) ------------------- */
 .podcast-grid {
     display: grid;
-    /* FIX: Set fixed 7 columns for the required layout */
+    /* Desktop: 7 columns */
     grid-template-columns: repeat(7, 1fr); 
-    gap: 0.7rem; /* Tight gap */
+    gap: 0.7rem; /* Tight gap for desktop */
     padding: 20px 50px;
     margin: 0 auto;
-    max-width: 100%; /* Important to allow max-width setting in media queries */
+    max-width: 100%; 
 }
 
-/* Increase max-width for the grid container on larger screens */
+/* Largest Desktop Screen */
 @media (min-width: 1700px) { 
     .podcast-grid {
         grid-template-columns: repeat(7, 1fr); 
         gap: 15px; 
-        max-width: 1600px; /* Limit max width for centering */
+        max-width: 1600px; /* Limit max width */
         padding: 20px 50px;
     }
 }
 
-/* ------------------- Podcast Card Details ------------------- */
+/* ------------------- Podcast Card Details (Desktop) ------------------- */
 .podcast-card {
     background-color: white;
     border-radius: 8px; 
     overflow: hidden;
+    /* Desktop: Card is a vertical stack */
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
     text-decoration: none; 
     color: inherit; 
     box-shadow: none; 
-    border: 1px solid #eee; /* Added a subtle border for definition */
+    border: 1px solid #eee; 
 }
 
 .podcast-image {
@@ -137,6 +103,7 @@ main {
     border-radius: 6px; 
     margin-bottom: 5px;
     border: none;
+    flex-shrink: 0;
 }
 
 .card-content {
@@ -151,7 +118,6 @@ main {
     margin: 0 0 2px 0; 
     color: #222;
     
-    /* KEY FIX: Multi-line truncation that worked previously */
     overflow: hidden;
     display: -webkit-box;
     -webkit-box-orient: vertical;
@@ -182,8 +148,7 @@ main {
     line-height: 1.2;
 }
 
-
-/* ------------------- Pagination Styling (Uses controls class from component) ------------------- */
+/* ------------------- Pagination Styling ------------------- */
 .pagination-controls {
     display: flex;
     justify-content: center;
@@ -192,4 +157,77 @@ main {
     margin-top: 10px;
 }
 
-/* Note: .pagination-button is defined in Pagination.css */
+/* ------------------------------------------------ */
+/* --- 🛠️ KEY FIX: MOBILE RESPONSIVE OVERRIDES --- */
+/* ------------------------------------------------ */
+
+/* --- Tablet View (<= 768px) --- */
+@media (max-width: 768px) {
+    /* Stack controls */
+    .control-panel {
+        padding: 10px 15px; 
+        justify-content: center; 
+        flex-direction: column;
+    }
+    .search-container {
+        width: 100%;
+        max-width: 100%;
+    }
+    .control-input {
+        width: 100%;
+        min-width: 0; /* Override desktop min-width */
+    }
+    .control-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+    .control-select {
+        flex-grow: 1;
+    }
+
+    /* Grid: 3 columns */
+    .podcast-grid {
+        padding: 20px 20px;
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 15px;
+    }
+}
+
+/* --- Phone View (<= 576px) --- */
+@media (max-width: 576px) { 
+    /* Grid: 1 column */
+    .podcast-grid {
+        grid-template-columns: 1fr; 
+        padding: 20px 10px;
+        gap: 15px;
+    }
+
+    /* Card: Change to list-style (row) like the wireframe */
+    .podcast-card {
+        flex-direction: row; /* Change from column to row */
+        align-items: center; /* Vertically center image and text */
+    }
+
+    /* Image: Fix size for list view */
+    .podcast-image {
+        width: 100px; /* Fixed width */
+        height: 100px; /* Fixed height */
+        margin: 10px; /* Add spacing */
+        margin-bottom: 10px; /* Override desktop margin */
+    }
+
+    /* Card Content: Adjust padding for list view */
+    .card-content {
+        padding: 10px 15px 10px 0;
+    }
+
+    /* Card Text: Adjust font sizes for list view */
+    .podcast-title {
+        font-size: 1.1em;
+    }
+    .podcast-seasons,
+    .podcast-genre,
+    .podcast-updated {
+        font-size: 0.9em;
+    }
+}
