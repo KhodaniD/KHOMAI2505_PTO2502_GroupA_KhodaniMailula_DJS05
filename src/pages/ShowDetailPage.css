@@ -129,15 +129,10 @@
     height: 40px;
 }
 
-/* ------------------------------------------- */
-/* --- 🛠️ KEY FIX: MOBILE RESPONSIVENESS --- */
-/* This block fixes the "cut off" layout */
-/* ------------------------------------------- */
 
 /* --- Tablet & Phone (<= 768px) --- */
 @media (max-width: 768px) {
     .show-detail-page {
-        /* Fixes "cut off" by removing desktop padding/margin */
         padding: 0;
         margin: 0;
     }

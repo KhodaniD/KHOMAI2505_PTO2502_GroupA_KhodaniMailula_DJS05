@@ -10,29 +10,30 @@ import './SeasonNavigation.css';
  * @returns {JSX.Element} The SeasonNavigation component.
  */
 const SeasonNavigation = ({ seasons }) => {
+  // Ensure seasons is a valid array to prevent errors
   const safeSeasons = seasons && Array.isArray(seasons) ? seasons : [];
   
-  // State to track the currently selected season index. 
+  // State to track the currently selected season index.
   const [selectedSeasonIndex, setSelectedSeasonIndex] = useState(safeSeasons.length > 0 ? 0 : -1); 
 
   const handleSeasonChange = (event) => {
     setSelectedSeasonIndex(Number(event.target.value));
   };
 
+  // Get the data for the currently selected season
   const currentSeason = safeSeasons[selectedSeasonIndex];
 
   if (safeSeasons.length === 0 || !currentSeason) {
     return <p>This show currently has no detailed season or episode information.</p>;
   }
 
+  // Ensure episodes is a valid array
   const currentEpisodes = currentSeason.episodes && Array.isArray(currentSeason.episodes) ? currentSeason.episodes : [];
-
 
   return (
     <div className="season-navigation">
       <div className="season-header">
         <h2 className="season-title">
-          {/* FIX 1: Display just the title, which already contains "Season X" */}
           {currentSeason.title}
         </h2>
         <select
@@ -41,10 +42,10 @@ const SeasonNavigation = ({ seasons }) => {
           onChange={handleSeasonChange}
           name="season-select"
           id="season-select"
+          aria-label="Select a season"
         >
           {safeSeasons.map((season, index) => (
             <option key={index} value={index}>
-              {/* FIX 2: Display just the title in the dropdown */}
               {season.title}
             </option>
           ))}

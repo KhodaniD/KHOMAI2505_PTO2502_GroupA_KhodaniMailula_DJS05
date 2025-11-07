@@ -5,7 +5,7 @@ import { GENRE_MAP } from '../utils/constants';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import Pagination from '../components/Pagination';
-import './HomePage.css'; // This file will now use the successful structure
+import './HomePage.css'; 
 
 // How many shows to display per page (7 cards x 2 rows = 14)
 const SHOWS_PER_PAGE = 14;

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Header.css'; // We'll update this next
+import './Header.css'; 
 
 /**
  * Renders the global application header with icon and title.
@@ -12,11 +12,12 @@ const Header = () => {
     <header className="app-header">
       <div className="header-content">
         <Link to="/" className="header-title-link">
-          {/* Add the icon before the title */}
-          <span className="header-icon" role="img" aria-label="podcast icon">🎙️</span>
+          {/* The icon is hidden from screen readers (aria-hidden) 
+            because it's decorative and the title provides context.
+          */}
+          <span className="header-icon" aria-hidden="true">🎙️</span>
           <span className="header-title">Podcast App</span>
         </Link>
-        {/* We can add search/profile icons here later */}
       </div>
     </header>
   );

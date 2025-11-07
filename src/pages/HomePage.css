@@ -8,7 +8,7 @@ main {
 }
 
 /* ------------------- Control Panel Styling (Desktop) ------------------- */
-/* These styles are unique to the homepage and are safe */
+/* These styles are unique to the homepage*/
 .control-panel {
     display: flex;
     justify-content: space-between; 
@@ -71,12 +71,6 @@ main {
         max-width: 1600px; 
     }
 }
-
-/* ------------------------------------------------ */
-/* --- 🛠️ KEY FIX: SCOPED CARD STYLES --- */
-/* All card styles are now prefixed with .podcast-grid */
-/* to prevent "bleeding" into other pages. */
-/* ------------------------------------------------ */
 
 /* --- Desktop Card Styles (Scoped) --- */
 .podcast-grid .podcast-card {
@@ -144,7 +138,7 @@ main {
     margin-top: 10px;
 }
 
-/* ------------------- MOBILE RESPONSIVE OVERRIDES (Scoped) ------------------- */
+/* ------------------- MOBILE RESPONSIVE OVERRIDES ------------------- */
 
 /* --- Tablet View (<= 768px) --- */
 @media (max-width: 768px) {
