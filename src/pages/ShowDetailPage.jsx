@@ -1,15 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { GENRE_MAP } from '../utils/constants';
-import { formatDate } from '../utils/helpers';
 import LoadingSpinner from '../components/LoadingSpinner';
 import ErrorMessage from '../components/ErrorMessage';
 import SeasonNavigation from '../components/SeasonNavigation';
+import { GENRE_MAP } from '../utils/constants';
 import './ShowDetailPage.css';
 
 /**
- * Renders the detail page for a specific show.
- * Fetches show data based on the 'showId' from the URL.
+ * Renders the detailed view for a single podcast show.
+ * It fetches the show's data based on the 'showId' from the URL parameter
+ * and displays its description, seasons, and a list of episodes.
  *
  * @returns {JSX.Element} The ShowDetailPage component.
  */
@@ -18,17 +18,28 @@ const ShowDetailPage = () => {
   const [show, setShow] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedSeason, setSelectedSeason] = useState(null); // Tracks the currently viewed season
 
+  // Effect to fetch show details when the component mounts or showId changes
   useEffect(() => {
     const fetchShowDetails = async () => {
       try {
         setLoading(true);
         const res = await fetch(`https://podcast-api.netlify.app/id/${showId}`);
-        if (!res.ok) {
-          throw new Error(`Show not found (ID: ${showId})`);
-        }
+        if (!res.ok) throw new Error('Failed to fetch show details');
         const data = await res.json();
-        setShow(data);
+        
+        // Ensure genres is always an array (handles different API responses)
+        const genres = Array.isArray(data.genres)
+          ? data.genres
+          : (data.genres ? String(data.genres).split(',').map(Number) : []);
+        
+        setShow({ ...data, genres });
+        
+        // Automatically select the first season (season 1) by default
+        if (data.seasons && data.seasons.length > 0) {
+          setSelectedSeason(data.seasons[0].season);
+        }
         setError(null);
       } catch (err) {
         setError(err.message);
@@ -36,83 +47,90 @@ const ShowDetailPage = () => {
         setLoading(false);
       }
     };
-    if (showId) {
-      fetchShowDetails();
-    }
-  }, [showId]);
+    fetchShowDetails();
+  }, [showId]); // Dependency array ensures this re-runs if the showId changes
 
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-  if (error) {
-    return <ErrorMessage message={error} />;
-  }
-  if (!show) {
-    return <ErrorMessage message="Could not find show details." />;
-  }
+  // --- Render logic ---
 
-  const genres = show.genres || [];
-  const seasons = show.seasons || [];
-  const totalEpisodes = seasons.reduce((acc, season) => acc + season.episodes.length, 0);
+  if (loading) return <LoadingSpinner />;
+  if (error) return <ErrorMessage message={error} />;
+  if (!show) return <ErrorMessage message="Show not found." />;
 
-  // --- FIX: Logic to handle genre display based on data type ---
-  const renderableGenres = Array.isArray(genres)
-    ? genres.map(genre => {
-        // If genre is a number (from homepage preview), look it up in GENRE_MAP
-        if (typeof genre === 'number') {
-          return GENRE_MAP[genre] || 'Unknown';
-        } 
-        // If genre is a string (from detail API), use the string directly
-        return genre;
-      })
-    : [];
-  // --- END FIX ---
+  // Find the full data object for the currently selected season
+  const seasonData = show.seasons.find(
+    (s) => s.season === selectedSeason
+  );
+
+  // Helper logic to render genre names correctly
+  const renderableGenres = show.genres.map((id) => GENRE_MAP[id] || 'Unknown');
 
   return (
-    <div className="show-detail-container">
-      <Link to="/" className="back-link">&larr; Back to all shows</Link>
+    <main className="show-detail-page">
+      <Link to="/" className="back-link">
+        &larr; Back to all shows
+      </Link>
 
-      <div className="show-header-grid">
-        <img src={show.image} alt={show.title} className="show-image-large" />
-        <div className="show-info">
-          <h1 className="show-title">{show.title}</h1>
+      {/* --- Show Header Section --- */}
+      <div className="show-header-card">
+        <img src={show.image} alt={`${show.title} cover`} className="show-image-main" />
+        <div className="show-header-content">
+          <h1 className="show-title-main">{show.title}</h1>
           <p className="show-description">{show.description}</p>
-          <div className="show-meta">
-            <div className="meta-item">
+          
+          {/* Metadata Grid */}
+          <div className="show-meta-grid">
+            <div>
               <strong>Genres</strong>
-              <div className="genre-tags">
-                {/* Use the new renderableGenres array */}
-                {renderableGenres.map((name, index) => ( 
-                  <span key={index} className="genre-tag">
-                    {name}
-                  </span>
-                ))}
-              </div>
+              <p>{renderableGenres.join(', ')}</p>
             </div>
-            <div className="meta-item">
-              <strong>Last Updated</strong>
-              <span>{show.updated ? formatDate(show.updated) : 'N/A'}</span>
-            </div>
-            <div className="meta-item">
+            <div>
               <strong>Total Seasons</strong>
-              <span>{seasons.length}</span>
+              <p>{show.seasons.length}</p>
             </div>
-            <div className="meta-item">
+            <div>
+              <strong>Last Updated</strong>
+              <p>{new Date(show.updated).toLocaleDateString()}</p>
+            </div>
+            <div>
               <strong>Total Episodes</strong>
-              <span>{totalEpisodes} Episodes</span>
+              <p>{show.seasons.reduce((acc, s) => acc + s.episodes.length, 0)}</p>
             </div>
           </div>
         </div>
       </div>
 
-      <h2 className="current-season-title">Current Season</h2>
-      
-      {seasons.length > 0 ? (
-        <SeasonNavigation seasons={seasons} />
-      ) : (
-        <p>No season information available for this show.</p>
-      )}
-    </div>
+      {/* --- Season & Episode List Section --- */}
+      <div className="season-section">
+        {/* Season Selector Component */}
+        <SeasonNavigation
+          seasons={show.seasons}
+          selectedSeason={selectedSeason}
+          onSeasonSelect={setSelectedSeason}
+        />
+        
+        {/* Episode List */}
+        <div className="episode-list">
+          {!seasonData ? (
+            <p>No season selected or data available.</p>
+          ) : (
+            // Map over the episodes of the selected season
+            seasonData.episodes.map((episode) => (
+              <div key={episode.episode} className="episode-card">
+                <img src={seasonData.image} alt="Season cover" className="episode-image" />
+                <div className="episode-content">
+                  <h4 className="episode-title">{episode.episode}. {episode.title}</h4>
+                  <p className="episode-description">{episode.description}</p>
+                  <audio controls className="episode-audio-player">
+                    <source src={episode.file} type="audio/mpeg" />
+                    Your browser does not support the audio element.
+                  </audio>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </div>
+    </main>
   );
 };
 
